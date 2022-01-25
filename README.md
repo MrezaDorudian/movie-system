@@ -10,6 +10,7 @@ A simple HTTP server with flask for IE course at university
 ```bash
 # Clone this repository to your machine
 git clone https://github.com/MrezaDorudian/movie-system.git
+
 # Navigate to the downloaded folder
 cd movie-system
 ```
