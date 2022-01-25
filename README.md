@@ -22,4 +22,4 @@ docker build --tag movie_app .
 
 # Run the container
 docker run -d -p 8080:8080 movie_app
-```bash
+```
