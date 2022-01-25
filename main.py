@@ -1,15 +1,11 @@
-import sqlite3
-from datetime import timedelta
-
 import flask
-import sqliteDB
+from database import sqliteDB
 import jwt
 
 ADMIN_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NfbGV2ZWwiOiJhZG1pbiJ9.dtLqN1M1-xMMC98TSy70Z0sVn5z_ctq8j9oj6Z_4S3c'
 
 app = flask.Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "super-secret"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
+app.config['SECRET_KEY'] = 'secret'
 
 
 def admin_auth_check():
@@ -85,10 +81,10 @@ def manage_comments(id):
         return auth
     try:
         if request_data['approved']:
-            sqliteDB.approve_comment(id)
+            sqliteDB.update_comment(id, 1)
             return flask.make_response(flask.jsonify({}), 204)
         else:
-            sqliteDB.disapprove_comment(id)
+            sqliteDB.update_comment(id, 0)
             return flask.make_response(flask.jsonify({}), 204)
     except KeyError:
         return flask.make_response(flask.jsonify({'message': 'missing data'}), 400)
@@ -121,14 +117,16 @@ def user_auth_check():
         token = flask.request.headers['Authorization'].split(' ')[1]
         decoded_token = jwt.decode(token, '', algorithms=['HS256'])
         access_level = decoded_token['access_level']
-        user_id = decoded_token['user_id']
+        user_id = decoded_token['id']
     except KeyError:
         return flask.make_response(flask.jsonify({'message': 'unauthorized'}), 401)
     if access_level != 'user':
         return flask.make_response(flask.jsonify({'message': 'unauthorized'}), 401)
     return int(user_id)
 
+
 # ==================================== normal users handlers start ====================================
+
 @app.route('/user/vote', methods=['POST'])
 def vote_movie():
     request_data = flask.request.get_json()
@@ -140,8 +138,11 @@ def vote_movie():
 
     try:
         if sqliteDB.movie_exist_by_id(request_data['movie_id']):
-            sqliteDB.vote_movie(user_id, request_data['movie_id'], request_data['vote'])  # bug here
-            return flask.make_response(flask.jsonify({}), 204)
+            if not sqliteDB.check_user_voted_for_a_movie(user_id, request_data['movie_id']):
+                sqliteDB.vote_movie(user_id, request_data['movie_id'], request_data['vote'])
+                return flask.make_response(flask.jsonify({}), 204)
+            else:
+                return flask.make_response(flask.jsonify({'message': 'this user already voted for this movie'}), 400)
         else:
             return flask.make_response(flask.jsonify({'message': 'movie does not exist'}), 400)
     except KeyError:
@@ -177,6 +178,7 @@ def insert_comment():
 # ==================================== normal users handlers end ====================================
 
 # ==================================== guest users handlers start ====================================
+
 @app.route('/comments', methods=['GET'])
 def get_comments():
     query_parameters = flask.request.args
@@ -192,7 +194,6 @@ def get_comments():
             return flask.make_response(flask.jsonify({'message': 'missing data'}), 400)
     except Exception as e:
         return flask.make_response(flask.jsonify({'message': str(e)}), 500)
-
 
 @app.route('/movies', methods=['GET'])
 def get_all_movies():
