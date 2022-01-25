@@ -1,8 +1,10 @@
 import sqlite3
 from datetime import datetime
 from .queries import *
+import os
 
-DB_NAME = 'sqliteDB.db'
+# DB_NAME = 'database.db'
+DB_NAME = os.path.join(os.path.dirname(__file__), 'database.db')
 
 
 def connect_db(query, args=()):
@@ -14,7 +16,7 @@ def connect_db(query, args=()):
         for q in query:
             cursor.execute(q, args)
     connection.commit()
-    connection.close()
+    # connection.close()
     return cursor
 
 

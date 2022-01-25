@@ -3,6 +3,9 @@ import jwt
 from .handlers import admin, users, guests  # noqa: E402
 
 ADMIN_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NfbGV2ZWwiOiJhZG1pbiJ9.dtLqN1M1-xMMC98TSy70Z0sVn5z_ctq8j9oj6Z_4S3c'
+USER_TOKEN_ID_0 = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NfbGV2ZWwiOiJ1c2VyIiwiaWQiOiIwIn0.uI8dEy1xhiikX4T7HI3zagSLzxKZhSrxskvU-vIIRDw'
+USER_TOKEN_ID_1 = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NfbGV2ZWwiOiJ1c2VyIiwiaWQiOiIxIn0.ggwZA8hzoDMrzjK__TxFUWKzhU-zn5iAiVu3nzmX3Dk'
+
 
 app = flask.Flask(__name__)
 
@@ -31,6 +34,7 @@ def user_auth_check():
 
 def get_app():
     return app
+
 
 @app.route('/admin/movie', methods=['POST'])
 def add_movie():

@@ -4,12 +4,13 @@ import os
 
 
 def start_db():
-    if not os.path.exists('database/sqliteDB.py'):
+    if not os.path.exists('database/database.db'):
         sqliteDB.create_tables()
+        print('database created')
 
 
 def start_app():
-    get_app().run(host='localhost', port=80)
+    get_app().run(host='localhost', port=80, debug=True)
 
 
 if __name__ == '__main__':

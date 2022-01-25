@@ -6,14 +6,14 @@ from database import sqliteDB
 def add_movie():
     data = flask.request.get_json()
     auth = app.admin_auth_check()
-    if auth.status_code == 401:
+    if auth and auth.status_code == 401:
         return auth
     try:
         if sqliteDB.movie_exist_by_name(data['name']):
             return flask.make_response(flask.jsonify({'message': 'movie already exist'}), 400)
         else:
             sqliteDB.add_movie(data['name'], data['description'])
-        return flask.make_response({}, 204)
+            return flask.make_response({}, 204)
     except KeyError:
         return flask.make_response(flask.jsonify({'message': 'missing data'}), 400)
     except TypeError:
@@ -25,7 +25,7 @@ def add_movie():
 def update_movie(id):
     request_data = flask.request.get_json()
     auth = app.admin_auth_check()
-    if auth.status_code == 401:
+    if auth and auth.status_code == 401:
         return auth
     try:
         if sqliteDB.movie_exist_by_id(id):
@@ -43,7 +43,7 @@ def update_movie(id):
 
 def delete_movie(id):
     auth = app.admin_auth_check()
-    if auth.status_code == 401:
+    if auth and auth.status_code == 401:
         return auth
     try:
         if sqliteDB.movie_exist_by_id(id):
@@ -58,7 +58,7 @@ def delete_movie(id):
 def update_comment(id):
     request_data = flask.request.get_json()
     auth = app.admin_auth_check()
-    if auth.status_code == 401:
+    if auth and auth.status_code == 401:
         return auth
     try:
         if request_data['approved']:
@@ -77,7 +77,7 @@ def update_comment(id):
 
 def delete_comment(id):
     auth = app.admin_auth_check()
-    if auth.status_code == 401:
+    if auth and auth.status_code == 401:
         return auth
     try:
         if sqliteDB.comment_exist_by_id(id):
