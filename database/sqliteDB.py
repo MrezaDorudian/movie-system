@@ -1,11 +1,11 @@
 import sqlite3
 from datetime import datetime
-from queries import *
+from .queries import *
 
 DB_NAME = 'sqliteDB.db'
 
 
-def connect_db(query, args=None):
+def connect_db(query, args=()):
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
     if type(query) == str:
@@ -138,6 +138,3 @@ def get_all_movies():
     return {
         "movies": movies,
     }
-
-
-create_tables()

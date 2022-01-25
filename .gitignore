@@ -4,4 +4,6 @@ dataStructures.py
 __pycache__/
 gen/
 movie-system
+cache/
+*/__init__.py
 
