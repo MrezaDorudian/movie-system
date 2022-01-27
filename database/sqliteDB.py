@@ -95,7 +95,7 @@ def update_rating(movie_id):
 
 
 def vote_movie(user_id, movie_id, vote):
-    connect_db(ADD_VOTE, (user_id, movie_id, vote))
+    connect_db(ADD_VOTE, (vote_counts(), user_id, movie_id, vote,))
     update_rating(movie_id)
 
 
