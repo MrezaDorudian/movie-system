@@ -1,5 +1,4 @@
 dataStructures.py
-*.db
 .idea/
 __pycache__/
 gen/
