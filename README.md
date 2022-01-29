@@ -1,11 +1,6 @@
 # movie-system
 A simple HTTP server with flask for IE course at university
 
-## Features
-- Multiple HTTP endpoints
-- Proper HTTP methods usage
-- Return related responses
-
 ## Get Started
 ```bash
 # Clone this repository to your machine
